@@ -1,0 +1,46 @@
+float x;
+float y;
+float radius = 7.5;
+float theta = 0;
+int numOfStars = 20;
+ 
+void setup() {
+  size(640,360);
+  background(0);
+  //Draws the stars in the background
+  for(int i = 0; i < numOfStars; i++) {
+      stroke(255, 255, 102);
+      strokeWeight(3);
+      point(random(width), random(height));
+  }
+  for(int i = 0; i < numOfStars; i++) {
+      stroke(255, 255, 204);
+      strokeWeight(3);
+      point(random(width), random(height));
+  }
+}
+ 
+void draw() {
+  float x = radius * cos(theta);
+  float y = radius * sin(theta);
+ 
+  noStroke();
+  fill(12);
+  ellipse(x+width/2, y+height/2, 15, 15);
+  drawSun();
+ 
+  theta -= 0.01;
+  radius -= .1;
+  
+  x = radius * cos(theta);
+  y = radius * sin(theta);
+  fill(255, 21, 21);
+  ellipse(x+width/2, y+height/2, 15, 15);
+ 
+}
+
+void drawSun() {
+    //Draw the sun
+    fill(255, 255, 102);
+    ellipse(width/2, height/2, 35, 35); 
+}
