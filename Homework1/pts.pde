@@ -3,7 +3,7 @@
 // AUTHOR:        Prof Jarek Rossignac
 // DATE CREATED:  September 2012
 // EDITS:         Last revised Sept 10, 2016
-// Edited by Kyrsten Greenfield and Ben French
+// EDITED BY Kyrsten Greenfield and Ben French
 //*****************************************************************************
 class pts 
   {
@@ -14,6 +14,7 @@ class pts
   Boolean loop=true;                       // is a closed loop
 
   pt[] G = new pt [maxnv];                 // geometry table (vertices)
+
 
  // CREATE
 
@@ -87,19 +88,18 @@ class pts
   
   // DISPLAY
   
-  void IDs() {
-    for (int v = 0; v < nv; v++) { 
+  void IDs() 
+    {
+    for (int v=0; v<nv; v++) 
+      { 
       fill(white); 
-      show(G[v], 13); 
+      show(G[v],13); 
       fill(black); 
-      if(v < 10) {
-        label(G[v], str(v));  
-      } else {
-        label(G[v],V(-5,0), str(v));
+      if(v<10) label(G[v],str(v));  
+      else label(G[v],V(-5,0),str(v)); 
       }
-    }
     noFill();
-}
+    }
   
   void showPicked() 
     {
@@ -142,9 +142,8 @@ class pts
   void dragAll() // moves all points to mimick mouse motion
     { 
     for (int i=0; i<nv; i++) G[i].moveWithMouse(); 
-    }    
+    }      
  
-  
   void moveAll(vec V) // moves all points by V
     {
     for (int i=0; i<nv; i++) G[i].add(V); 
