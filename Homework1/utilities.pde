@@ -71,7 +71,7 @@ MAKE SURE THAT YOU DELETE THE FRAMES_TIF folder in the IMAGES folder of your ske
 Boolean scribeText = true; // toggle for displaying of help text
 
 void scribe(String S, float x, float y) { // writes on screen at (x,y) with current fill color
-  fill(255); 
+  fill(0); 
   textSize(13);
   text(S, x, y); 
 } 
@@ -89,19 +89,19 @@ void scribeHeaderRight(String S) {
 } 
 
 void scribeFooter(String S, int i) { 
-  fill(255); 
+  fill(0); 
   textSize(12);
   text(S, 10, height-10-i*20); 
 } 
 
 void scribeAtMouse(String S) { 
-  fill(255); 
+  fill(0); 
   textSize(12);
   text(S, mouseX, mouseY); 
 }
 
 void scribeMouseCoordinates() {
-  fill(255); 
+  fill(0); 
   textSize(12);
   text("("+mouseX+","+mouseY+")", mouseX+7, mouseY+25); 
 }
@@ -112,8 +112,3 @@ void displayHeader() {
     scribeHeader(subtitle, 1);
     //image(myFace, width-myFace.width/2,25,myFace.width/2,myFace.height/2); 
 }
-
-//void displayFooter() {
-//    scribeFooter(guide, 1); 
-//    scribeFooter(menu, 0); 
-//}
