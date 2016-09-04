@@ -101,33 +101,60 @@ pt spiral(pt A, pt B, pt C, float t)
   return L(G,R(B,t*a,G),pow(s,t));
   }
 
-// DRAWS SPIRAL SEGMENT THROUGH 3 POINTS
-void showSpiralThrough3Points(pt A, pt B, pt C) 
-  {
+// DRAWS SPIRAL SEGMENT THROUGH 3 POINTS - rewritten to include other variables
+void showSpiralThrough3Points(pt A, pt B, pt C, float t, float innerRad, float outerRad) {
   float a =spiralAngle(A,B,B,C); 
   float m =spiralScale(A,B,B,C);
   pt F = SpiralCenter(a, m, A, B); 
+  
+  float numOfTurns = 10;
+  //float innerRad = 5;
+  //float outerRad = 150;
+
   beginShape();
-    for(float t=-1.0; t<=1.05; t+=0.05) 
-      v(spiralPt(B,F,m,a,t));
+   // for(float t=-1.0; t<=1.05; t+=0.05) {
+       float newNum = map(i, 0, (360 * numOfTurns), innerRad, outerRad);
+       vEllipse(spiralPt(B,F,m,a,t), 3 + newNum/num, 3 + newNum/num);  
+   // } 
   endShape();
-  }
+  
+}
+// DRAWS SPIRAL SEGMENT THROUGH 3 POINTS
+void showSpiralThrough3Points(pt A, pt B, pt C) {
+  float a =spiralAngle(A,B,B,C); 
+  float m =spiralScale(A,B,B,C);
+  pt F = SpiralCenter(a, m, A, B); 
+
+
+  beginShape();
+   for(float t=-1.0; t<=1.05; t+=0.05) {
+       v(spiralPt(B,F,m,a,t)); 
+
+
+    } 
+  endShape();
+  
+}
  
 pt spiralPt(pt A, pt F, float m, float a, float t)     //  A rotated by at and scaled by s^t wrt G
   {return L(F,R(A,t*a,F),pow(m,t));}  
 
+//DRAWS SPIRAL PATTERN WITH CHANGING STROKEWEIGHT
 void showSpiralPattern(pt A, pt B, pt C, pt D) {
   float a = spiralAngle(A, B, C, D); 
   float m = spiralScale(A, B, C, D);
   pt F = SpiralCenter(a, m, A, C); 
+  float strWeight = 5.25;
   beginShape();
     for(float t = 0.05; t < 1; t += 0.05) {
+      strokeWeight(strWeight);
       edge(spiralPt(A, F, m, a, t), spiralPt(B, F, m, a, t));
-      
-    }
+      strWeight -= .24; 
+   }
   endShape();
 }
- 
+
+
 
 // SPHERICAL INTERPOLATION USED (WRONGLY) FOR VECTORS U AND V THAT MAUY NOT HAVE SAME MAGNITUDE
 vec slerp(vec U, float t, vec V) 
