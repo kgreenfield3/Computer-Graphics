@@ -4,7 +4,7 @@
 // AUTHOR:        Prof Jarek Rossignac
 // DATE CREATED:  September 2009
 // EDITS:         Revised July 2011
-// Edited by Kyrsten Greenfield and Ben French
+// EDIT BY Kyrsten Greenfield and Ben French
 //*****************************************************************************
 //************************************************************************
 //**** POINT CLASS
@@ -138,11 +138,35 @@ pt P(float a, pt A, float b, pt B, float c, pt C, float d, pt D){return P(a*A.x+
 // display 
 void show(pt P, float r) {ellipse(P.x, P.y, 2*r, 2*r);};                                             // draws circle of center r around P
 void show(pt P) {ellipse(P.x, P.y, 6,6);};                                                           // draws small circle around point
-void label(pt P, String S) {text(S, P.x-4,P.y+6.5); }                                                 // writes string S next to P on the screen ( for example label(P[i],str(i));)
+void label(pt P, String S) {text(S, P.x-20,P.y+5); }                                                 // writes string S next to P on the screen ( for example label(P[i],str(i));)
 void label(pt P, vec V, String S) {text(S, P.x-3.5+V.x,P.y+7+V.y); }                                  // writes string S at P+V
-void showId(pt P, String S) {fill(white); show(P,13); fill(black); label(P,S);}                       // sows disk with S written inside
-void edge(pt P, pt Q) {line(P.x,P.y,Q.x,Q.y); };                                                      // draws edge (P,Q)
-void v(pt P) {vertex(P.x,P.y);};                                                                      // vertex for drawing polygons between beginShape() and endShape()
+void showId(pt P) {fill(white); show(P,13); fill(black);}  // sows disk with S written inside
+void showIdCenter(pt P, String S) {fill(white); show(P,25); fill(black); label(P,S);}
+
+//Different edge functions that handles lines, ellipses, and the spiral pattern
+void edgeLine(pt P, pt Q, int lineColor) { 
+  stroke(lineColor);
+  line(P.x,P.y,Q.x,Q.y); 
+};      // draws edge (P,Q)
+void edge(pt P, pt Q) { 
+  line(P.x,P.y,Q.x,Q.y); 
+};      // draws edge (P,Q)
+void edgePattern(pt P, pt Q) {
+  ellipseMode(CENTER);
+  pt ave = P(P, Q);
+  ellipse(ave.x, ave.y, 2, 120); 
+};      // draws edge (P,Q)
+//Outer edge of spiral
+void edgeEllipse(pt P, pt Q) {
+     ellipseMode(CORNERS);
+   ellipse(P.x,P.y,Q.x,Q.y);
+};   
+void vEllipse(pt P, float innerRad, float outerRad) { 
+  ellipse(P.x,P.y, 2*innerRad, 2*outerRad); 
+};  
+
+
+void v(pt P) { vertex(P.x, P.y); }; 
 void arrow(pt P, pt Q) {arrow(P,V(P,Q)); }                                                            // draws arrow from P to Q
 void show(pt A, pt B, pt C)  {beginShape();  A.v(); B.v(); C.v(); endShape(CLOSE);}                   // render triangle A, B, C
 void show(pt A, pt B, pt C, pt D)  {beginShape();  A.v(); B.v(); C.v(); D.v(); endShape(CLOSE);}      // render quad A, B, C, D
@@ -156,7 +180,7 @@ void show(pt A, pt B, pt C, pt D)  {beginShape();  A.v(); B.v(); C.v(); D.v(); e
 
 // create 
 vec V(vec V) {return new vec(V.x,V.y); };                                                             // make copy of vector V
-vec V(pt P) {return new vec(P.x,P.y); };                                                              // make vector from origin to P
+vec V(pt P) {return new vec(P.x,P.y); };   
 vec V(float x, float y) {return new vec(x,y); };                                                      // make vector (x,y)
 vec V(pt P, pt Q) {return new vec(Q.x-P.x,Q.y-P.y);};                                                 // PQ (make vector Q-P from P to Q
 vec U(vec V) {float n = n(V); if (n==0) return new vec(0,0); else return new vec(V.x/n,V.y/n);};      // V/||V|| (Unit vector : normalized version of V)
@@ -267,7 +291,8 @@ float triangleMoment(pt A, pt B, pt C)
 //**** INTERPOLATING PAREMETRIC MOTION
 //************************************************************************
 // Linear
-pt L(pt A, pt B, float t) {return P(A.x+t*(B.x-A.x),A.y+t*(B.y-A.y));}
+pt L(pt A, pt B, float t) {
+return P(A.x+t*(B.x-A.x),A.y+t*(B.y-A.y));}
 
 
 //************************************************************************
