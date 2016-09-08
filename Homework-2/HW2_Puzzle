@@ -1,0 +1,75 @@
+// straight lines and dots: http://www.openprocessing.org/sketch/33770
+// line intersection https://forum.processing.org/two/discussion/90/point-and-line-intersection-detection
+
+int x[] = new int[1000];
+int y[] = new int[1000];
+int numOfClicks = 0;
+boolean shapeDraw = true;
+boolean edgeDraw = false;
+float w = 25;
+float h = 25;
+
+void setup() {
+  size(500, 500);
+  background(255);
+}
+
+void draw() {
+  if (shapeDraw == true) {
+    drawShape();  
+  }
+  if (edgeDraw == true) {
+    drawEdge();
+  }
+  if (mousePressed == true) {
+    x[numOfClicks] = mouseX;
+    y[numOfClicks] = mouseY;
+    numOfClicks++;
+    
+  }
+}
+
+void drawShape() {
+  beginShape();
+  stroke(0);
+  for (int i = 0; i < numOfClicks; i++) {
+    if (i == 0) {
+       fill(255);
+      ellipseMode(CENTER);
+      ellipse(x[i], y[i], w, h);
+      vertex(x[i], y[i]);
+    }
+    if (i > 0) {
+      if (((x[i] > x[0] - w/2) && (x[i] < x[0] + w/2)) && ((y[i] > x[0] - h/2) && (y[i] < y[0] + h/2))) {
+        fill(0, 255, 153);
+        vertex(x[0], y[0]);
+       
+      } else {
+        fill(255);
+        ellipseMode(CENTER);
+        ellipse(x[i], y[i], w, h);
+        vertex(x[i], y[i]);
+      }
+    } 
+   
+  }
+   endShape();
+}
+
+
+void drawEdge() {
+  stroke(0);
+  line(mouseX, mouseY, pmouseX, pmouseY);
+  
+}
+
+void keyPressed() {
+  if (key == 's') {
+  }
+  if (key == 'e' && mousePressed) {
+    edgeDraw = !edgeDraw;
+    println("Key pressed: " + key);
+  }
+  
+  
+}
