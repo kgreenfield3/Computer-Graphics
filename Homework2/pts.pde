@@ -77,7 +77,12 @@ class pts
     pv=max(0,pv-1);       // reset index of picked point to previous
     nv--;  
     }
-  
+ pts copyOf(pts P, pts Q, float x) {
+   for (int i = 0; i <= x; i++) {
+     P.G[i] = Q.G[i];
+   }
+   return Q;
+ }
   void setPt(pt P, int i) 
     { 
     G[i].setTo(P); 
@@ -270,14 +275,18 @@ class pts
 
   // FILE I/O   
      
-  void savePts(String fn) 
-    {
-    String [] inppts = new String [nv+1];
-    int s=0;
-    inppts[s++]=str(nv);
-    for (int i=0; i<nv; i++) {inppts[s++]=str(G[i].x)+","+str(G[i].y);}
-    saveStrings(fn,inppts);
-    };
+  void savePts(String fn) {
+    println("Saving: " + fn); 
+    String[] inppts = new String[nv];
+    int s = 0;
+    nv -= 1;
+    inppts[s++] = str(nv);
+    for (int i=0; i< nv; i++) {
+       inppts[s++]=str(G[i].x)+","+str(G[i].y);
+    }
+     saveStrings(fn, inppts);
+    
+ };
   
 
   void loadPts(String fn) 
