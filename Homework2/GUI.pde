@@ -76,7 +76,7 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
     if(key=='P') ; 
     if(key=='Q') exit();  // quit application
     if(key=='R') ; 
-    if(key=='S') P.savePts("data/pts");    // save current positions of control points on file
+    if(key=='S') ;//P.savePts("data/pts");    // save current positions of control points on file
     if(key=='T') ;
     if(key=='U') ;
     if(key=='V') ;
@@ -127,19 +127,19 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
 
     }
 
-void mousePressed()   // executed when the mouse is pressed
-  {
-  if (!keyPressed || (key=='a') || (key=='i') || (key=='x'))  
-  P.pickClosest(Mouse()); // pick vertex closest to mouse: sets pv ("picked vertex") in pts
-  if (keyPressed) 
-     {
-     if (key=='a')  P.addPt(Mouse()); // appends vertex after the last one
-     if (key=='i')  P.insertClosestProjection(Mouse()); // inserts vertex at closest projection of mouse
-     if (key=='d')  P.deletePickedPt(); // deletes vertex closeset to mouse
-     } 
-  if (keyPressed && key=='s') {A=Mouse(); B=Mouse();} 
-  change=true;
-  }
+//void mousePressed()   // executed when the mouse is pressed
+//  {
+//  if (!keyPressed || (key=='a') || (key=='i') || (key=='x'))  
+//  P.pickClosest(Mouse()); // pick vertex closest to mouse: sets pv ("picked vertex") in pts
+//  if (keyPressed) 
+//     {
+//     if (key=='a')  P.addPt(Mouse()); // appends vertex after the last one
+//     if (key=='i')  P.insertClosestProjection(Mouse()); // inserts vertex at closest projection of mouse
+//     if (key=='d')  P.deletePickedPt(); // deletes vertex closeset to mouse
+//     } 
+//  if (keyPressed && key=='s') {A=Mouse(); B=Mouse();} 
+//  change=true;
+//  }
 
 void mouseReleased()   // executed when the mouse is pressed
   {
