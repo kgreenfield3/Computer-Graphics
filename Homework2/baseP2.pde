@@ -6,6 +6,7 @@ import processing.pdf.*;    // to save screen shots as PDFs, does not always wor
 // network https://processing.org/tutorials/network/
 //**************************** global variables ****************************
 pts P = new pts(); // class containing array of points, used to standardize GUI
+pts Q = new pts();
 float t=0, f=0;
 boolean animate=true, fill=false, timing=false;
 boolean lerp=true, slerp=true, spiral=true; // toggles to display vector interpoations
@@ -21,20 +22,29 @@ float y[] = new float[1000];
 int numOfClicks = 0;
 boolean shapeDraw = true;
 boolean edgeDraw = false;
+boolean selectSave = false;
+boolean selectUpload = true;
 float w = 35;
 float h = 35;
 pt startingPoint, endingPoint;
+float buttW = 75;
+float buttH = 25;
+Button save, upload;
+
+
 //**************************** initialization ****************************
 void setup()               // executed once at the begining 
   {
-  size(500, 500);            // window size
+  size(600, 600);            // window size
   frameRate(30);             // render 30 frames per second
   smooth();                  // turn on antialiasing
   myFace = loadImage("data/pic.jpg");  // load image from file pic.jpg in folder data *** replace that file with your pic of your own face
   P.declare(); // declares all points in P. MUST BE DONE BEFORE ADDING POINTS 
   // P.resetOnCircle(4); // sets P to have 4 points and places them in a circle on the canvas
- // P.loadPts("data/pts");  // loads points form file saved with this program
+  P.loadPts("data/pts");  // loads points form file saved with this program
   background(255);
+  save = new Button("Save", width/2, height - 30, buttW, buttH, 10);
+  //upload = new Button("Load Puzzle", width/2 + 75, height - 30, buttW, buttH, 10);
 } // end of setup
 
 //**************************** display current frame ****************************
@@ -42,15 +52,22 @@ void draw()      // executed at each frame
   {
   if(recordingPDF) startRecordingPDF(); // starts recording graphics to make a PDF
 
-    //pen(black, 3); 
-    //fill(yellow); 
-    //P.drawCurve(); 
-    //P.IDs(); // shows polyloop with vertex labels
-    //stroke(red); 
-    //pt G=P.Centroid(); 
-    //show(G,10); // shows centroid
-    //pen(green,5); 
-    //arrow(A,B);            // defines line style with (5) and color (green) and draws starting arrow from A to B
+ 
+  if (selectSave) {
+    strokeWeight(4);
+     save.Draw();
+     selectSave = false;
+  } else {
+    strokeWeight(1);
+     save.Draw();
+  }
+
+  if(save.mouseOver() && shapeDraw == false) {
+    cursor(HAND);
+  } else {
+   cursor(ARROW); 
+  }
+
   if (shapeDraw == true) {
     drawShape(); 
   }
@@ -74,21 +91,23 @@ void drawShape() {
    if (mousePressed) {
     x[numOfClicks] = mouseX;
     y[numOfClicks] = mouseY;
+    P.addPt(x[numOfClicks], y[numOfClicks]);
+    //println("Point " + numOfClicks + ": " + x[numOfClicks] + ", " + y[numOfClicks]);
     numOfClicks++;
     mousePressed = false;
     
   }
   beginShape();
+ 
   stroke(0);
   for (int i = 0; i < numOfClicks; i++) {
-
     if (i == 0) {
       fill(255);
       ellipseMode(CENTER);
-      ellipse(x[i], y[i], w, h);
-      vertex(x[i], y[i]);
-      P.G[i] = P(x[i], y[i]);
-      //showId(P.G[i], i);
+      ellipse(x[0], y[0], w, h);
+      vertex(x[0], y[0]);
+      
+
       
     }
     if (i > 0) {
@@ -96,21 +115,20 @@ void drawShape() {
         fill(0, 255, 153);
         vertex(x[0], y[0]);
         shapeDraw = false;
+
         
         
         
-       
       } else {
         fill(255);
         ellipseMode(CENTER);
         ellipse(x[i], y[i], w, h);
         vertex(x[i], y[i]);
-        P.G[i] = P(x[i], y[i]);
-        //showId(P.G[i], i);
+
         
       }
     } 
-   
+     
   }
   
    endShape();
@@ -119,6 +137,8 @@ void drawShape() {
       ellipseMode(CENTER);
       ellipse(x[i], y[i], w, h);
       showId(P.G[i], i);
+      
+      
    }
 }
 
@@ -134,5 +154,15 @@ void drawEdge() {
    
   }
   edge(startingPoint, endingPoint);
+}
+
+void mousePressed()
+{
+  if (save.mouseOver()) {
+    P.savePts("data/pts");
+    println("\n Your puzzle is saved.");
+    selectSave = true;
+  }
+ 
   
 }
