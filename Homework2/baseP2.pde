@@ -22,15 +22,15 @@ float y[] = new float[1000];
 int numOfClicks = 0;
 boolean shapeDraw = true;
 boolean edgeDraw = false;
-boolean selectSave = false;
-boolean selectUpload = true;
+boolean selectSave = true;
+boolean selectLoad = true;
 float w = 35;
 float h = 35;
 pt startingPoint, endingPoint;
 float buttW = 75;
 float buttH = 25;
-Button save, upload;
-
+Button save, load;
+int nodes = 0;
 
 //**************************** initialization ****************************
 void setup()               // executed once at the begining 
@@ -43,8 +43,8 @@ void setup()               // executed once at the begining
   // P.resetOnCircle(4); // sets P to have 4 points and places them in a circle on the canvas
   //P.loadPts("data/pts");  // loads points form file saved with this program
   background(255);
-  save = new Button("Save", width/2, height - 30, buttW, buttH, 10);
-  //upload = new Button("Load Puzzle", width/2 + 75, height - 30, buttW, buttH, 10);
+  save = new Button("Save", width/2 - 75, height - 30, buttW, buttH, 10);
+  load = new Button("Load Puzzle", width/2 + 75, height - 30, buttW, buttH, 10);
 } // end of setup
 
 //**************************** display current frame ****************************
@@ -52,22 +52,18 @@ void draw()      // executed at each frame
   {
   if(recordingPDF) startRecordingPDF(); // starts recording graphics to make a PDF
 
- 
-  if (selectSave) {
-    strokeWeight(4);
-     save.Draw();
-     selectSave = false;
-  } else {
-    strokeWeight(1);
-     save.Draw();
-  }
-
-  if(save.mouseOver() && shapeDraw == false) {
+   if (nodes > 3) {
+     save.Draw();  
+   }
+  
+  load.Draw();
+  if(load.mouseOver() || save.mouseOver()) {
+    shapeDraw = false;
     cursor(HAND);
   } else {
+    shapeDraw = true;
    cursor(ARROW); 
   }
-
   if (shapeDraw == true) {
     drawShape(); 
   }
@@ -106,6 +102,7 @@ void drawShape() {
       ellipseMode(CENTER);
       ellipse(x[0], y[0], w, h);
       vertex(x[0], y[0]);
+      nodes += 1;
       
 
       
@@ -114,6 +111,7 @@ void drawShape() {
       if (((x[i] > x[0] - w/2) && (x[i] < x[0] + w/2)) && ((y[i] > x[0] - h/2) && (y[i] < y[0] + h/2))) {
         fill(0, 255, 153);
         vertex(x[0], y[0]);
+        nodes += 1;
         shapeDraw = false;
 
         
@@ -124,6 +122,7 @@ void drawShape() {
         ellipseMode(CENTER);
         ellipse(x[i], y[i], w, h);
         vertex(x[i], y[i]);
+        nodes += 1;
 
         
       }
@@ -162,6 +161,11 @@ void mousePressed()
     P.savePts("data/pts");
     println("\n Your puzzle is saved.");
     selectSave = true;
+  }
+  if (load.mouseOver()) {
+    P.loadPts("data/pts");
+    println("\n Your puzzle is loaded.");
+    selectLoad = true;
   }
  
   
