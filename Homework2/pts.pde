@@ -294,16 +294,34 @@ class pts
     println("loading: "+fn); 
     String [] ss = loadStrings(fn);
     String subpts;
-    int s=0;   int comma, comma1, comma2;   float x, y;   int a, b, c;
-    nv = int(ss[s++]); print("nv="+nv);
-    for(int k=0; k<nv; k++) {
-      int i=k+s; 
-      comma=ss[i].indexOf(',');   
-      x=float(ss[i].substring(0, comma));
-      y=float(ss[i].substring(comma+1, ss[i].length()));
+    int s = 0;   int comma, comma1, comma2;   float x, y;   int a, b, c;
+    nv = int(ss[s++]); print("nv = " +nv);
+    fill(0, 255, 153);
+    strokeWeight(1);
+    stroke(black);
+    beginShape();
+    for(int k = 0; k < nv; k++) {
+      int i = k + s; 
+      comma = ss[i].indexOf(',');   
+      x = float(ss[i].substring(0, comma));
+      y = float(ss[i].substring(comma + 1, ss[i].length()));
       G[k].setTo(x,y);
-      };
-    pv=0;
+      vertex(G[k].x, G[k].y);
+     
+    };
+    endShape(CLOSE);
+    addEllipse(nv);
+    pv = 0;
     }; 
-  
+    
+void addEllipse(int nv) {
+ for(int j = 0; j < nv; j++) {
+    ellipseMode(CENTER);
+    fill(255);
+    stroke(black);
+    ellipse(G[j].x, G[j].y, 35, 35);
+    showId(G[j], j);  
+  }
+}
   }  // end class pts
+  
