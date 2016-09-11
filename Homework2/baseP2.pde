@@ -41,7 +41,7 @@ void setup()               // executed once at the begining
   myFace = loadImage("data/pic.jpg");  // load image from file pic.jpg in folder data *** replace that file with your pic of your own face
   P.declare(); // declares all points in P. MUST BE DONE BEFORE ADDING POINTS 
   // P.resetOnCircle(4); // sets P to have 4 points and places them in a circle on the canvas
-  P.loadPts("data/pts");  // loads points form file saved with this program
+  //P.loadPts("data/pts");  // loads points form file saved with this program
   background(255);
   save = new Button("Save", width/2, height - 30, buttW, buttH, 10);
   //upload = new Button("Load Puzzle", width/2 + 75, height - 30, buttW, buttH, 10);
