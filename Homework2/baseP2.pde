@@ -58,15 +58,13 @@ void draw()      // executed at each frame
   
   load.Draw();
   if(load.mouseOver() || save.mouseOver()) {
-    shapeDraw = false;
     cursor(HAND);
   } else {
-    shapeDraw = true;
    cursor(ARROW); 
   }
   if (shapeDraw == true) {
     drawShape(); 
-  }
+  } 
   if (edgeDraw == true) {
     drawEdge();
   }
@@ -104,6 +102,7 @@ void drawShape() {
       vertex(x[0], y[0]);
       nodes += 1;
       
+      
 
       
     }
@@ -123,6 +122,7 @@ void drawShape() {
         ellipse(x[i], y[i], w, h);
         vertex(x[i], y[i]);
         nodes += 1;
+       
 
         
       }
@@ -155,18 +155,21 @@ void drawEdge() {
   edge(startingPoint, endingPoint);
 }
 
-void mousePressed()
-{
+void mousePressed() {
+  
   if (save.mouseOver()) {
     P.savePts("data/pts");
     println("\n Your puzzle is saved.");
+    shapeDraw = false;
     selectSave = true;
   }
   if (load.mouseOver()) {
     P.loadPts("data/pts");
     println("\n Your puzzle is loaded.");
+    shapeDraw = false;
     selectLoad = true;
   }
  
   
 }
+
