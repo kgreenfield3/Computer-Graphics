@@ -134,10 +134,10 @@ pt P(float a, pt A, float b, pt B, float c, pt C) {return P(a*A.x+b*B.x+c*C.x,a*
 pt P(float a, pt A, float b, pt B, float c, pt C, float d, pt D){return P(a*A.x+b*B.x+c*C.x+d*D.x,a*A.y+b*B.y+c*C.y+d*D.y);} // aA+bB+cC+dD (assumes a+b+c+d=1)
      
 // display 
-void show(pt P, float r) {ellipse(P.x, P.y, 2*r, 2*r);};                                             // draws circle of center r around P
+void show(pt P, float r) { stroke(black); fill(white); ellipse(P.x, P.y, 2*r, 2*r);};                                             // draws circle of center r around P
 void show(pt P) {ellipse(P.x, P.y, 6,6);};                                                           // draws small circle around point
-void label(pt P, String S) { fill(black); text(S, P.x-4,P.y+6.5); }
-void label(pt P, int S) {text(S, P.x-3,P.y+4); } // writes string S next to P on the screen ( for example label(P[i],str(i));)
+void label(pt P, String S) { fill(black); text(S, P.x-3,P.y+6.5); }
+void label(pt P, int S) {text(S, P.x,P.y+4); } // writes string S next to P on the screen ( for example label(P[i],str(i));)
 void label(pt P, vec V, String S) {text(S, P.x-3.5+V.x,P.y+7+V.y); }                                  // writes string S at P+V
 void showId(pt P, String S) {fill(white); show(P,13); fill(black); label(P,S);}  
 void showId(pt P, int S) { fill(black); label(P,S);} // sows disk with S written inside
