@@ -59,12 +59,12 @@ void scribeHeaderRight(String S) {fill(0); text(S,width-7.5*S.length(),20); noFi
 void scribeFooter(String S, int i) {fill(0); text(S,10,height-10-i*20); noFill();} // writes black on screen at line i from bottom
 void scribeAtMouse(String S) {fill(0); text(S,mouseX,mouseY); noFill();} // writes on screen near mouse
 void scribeMouseCoordinates() {fill(black); text("("+mouseX+","+mouseY+")",mouseX+7,mouseY+25); noFill();}
-void displayHeader()  // Displays title and authors face on screen
-    {
-    scribeHeader(title,0);       scribeHeaderRight(name); 
-    scribeHeader(subtitle,1);
-    image(myFace, width-myFace.width/2,25,myFace.width/2,myFace.height/2); 
-    }
+//void displayHeader()  // Displays title and authors face on screen
+//    {
+//    scribeHeader(title,0);       scribeHeaderRight(name); 
+//    scribeHeader(subtitle,1);
+//    image(myFace, width-myFace.width/2,25,myFace.width/2,myFace.height/2); 
+//    }
 //void displayFooter()  // Displays help text at the bottom
 //    {
 //    scribeFooter(guide,1); 
