@@ -284,11 +284,55 @@ class pts
     for (int i=0; i< nv; i++) {
        inppts[s++]=str(G[i].x)+","+str(G[i].y);
     }
+    //inppts[s++]=str(G[0].x)+","+str(G[0].y);
      saveStrings(fn, inppts);
     
  };
   
-
+  void saveLines(String fn) {
+    println("Saving: " + fn); 
+    String[] inppts = new String[nv + 1];
+    int s = 0;
+    inppts[s++] = str(nv);
+    for (int i = 1; i < nv; i++) {
+       float m = (G[i].y - G[i - 1].y)/(G[i].x - G[i - 1].x);
+       float b = G[i].y - m * G[i].x;
+       inppts[s++]=m + "," + b;
+    }
+    float m = (G[0].y - G[nv].y)/(G[0].x - G[nv].x);
+    float b = G[0].y - m * G[0].x;
+    inppts[s++]=m + "," + b;
+     saveStrings(fn, inppts);
+  }
+  void findIntersection(pts P, pt A, pt B) { 
+    float m1, b1, x, y;
+    float m = (A.y - B.y) / (A.x - B.x);
+    float b = A.y - m * A.x;
+    pts copyP = new pts();
+    pt newP = new pt();
+    PShape poly1;
+    int labelNum = 0;
+    for(int k = 1; k <= nv; k++) {
+        m1 = (P.G[k].y - P.G[k - 1].y) / (P.G[k].x - P.G[k - 1].x);
+        b1 = P.G[k].y - m1 * P.G[k].x;
+        x = (b1 - b) / (m - m1);
+        y = m * x + b;
+        //copyP.addPt(P.G[k].x, P.G[k].y);
+        if ((x > min(A.x, B.x)) && (x < max(A.x, B.x)) && (y > min(A.y, B.y)) && (y < max(A.y, B.y))
+        && (x > min(P.G[k].x, P.G[k-1].x)) && (x < max(P.G[k].x, P.G[k-1].x)) && (y > min(P.G[k].y, P.G[k-1].y)) && (y < max(P.G[k].y, P.G[k-1].y))) {
+          fill(255, 0, 0);
+          ellipse(x, y, 20, 20);
+          newP.setTo(x, y);
+          newP.label(labelNum);
+          labelNum++;
+       
+          
+          
+       } 
+     
+    };
+    
+  }
   void loadPts(String fn) 
     {
     println("loading: "+fn); 

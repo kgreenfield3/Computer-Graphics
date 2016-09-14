@@ -6,6 +6,8 @@ import processing.pdf.*;    // to save screen shots as PDFs, does not always wor
 // network https://processing.org/tutorials/network/
 //**************************** global variables ****************************
 pts P = new pts(); // class containing array of points, used to standardize GUI
+pts copyP = new pts();
+int nv = int(P.length());
 pts Q = new pts();
 float t=0, f=0;
 boolean animate=true, fill=false, timing=false;
@@ -22,14 +24,17 @@ float y[] = new float[1000];
 int numOfClicks = 0;
 boolean shapeDraw = true;
 boolean edgeDraw = false;
-boolean selectSave = true;
+boolean selectSave = false;
 boolean selectLoad = true;
+boolean goodSplit = false;
+boolean dragA = false;
+boolean dragB = false;
 float w = 35;
 float h = 35;
 pt startingPoint, endingPoint;
 float buttW = 75;
 float buttH = 25;
-Button save, load;
+Button save, load, buttonA, buttonB;
 int nodes = 0;
 
 //**************************** initialization ****************************
@@ -45,14 +50,17 @@ void setup()               // executed once at the begining
   background(255);
   save = new Button("Save", width/2 - 75, height - 30, buttW, buttH, 10);
   load = new Button("Load Puzzle", width/2 + 75, height - 30, buttW, buttH, 10);
+  buttonA = new Button("", 0, 0, w, h, 10);
+  buttonB = new Button("", 0, 0, w, h, 10);
 } // end of setup
 
 //**************************** display current frame ****************************
 void draw()      // executed at each frame
   {
+    background(255);
   if(recordingPDF) startRecordingPDF(); // starts recording graphics to make a PDF
 
-   if (nodes > 3) {
+   if (nodes > 4) {
      save.Draw();  
    }
   
@@ -64,7 +72,10 @@ void draw()      // executed at each frame
   }
   if (shapeDraw == true) {
     drawShape(); 
-  } 
+  } else if (!shapeDraw) {
+    editShape();
+  }
+    
   if (edgeDraw == true) {
     drawEdge();
   }
@@ -72,14 +83,22 @@ void draw()      // executed at each frame
 
   if(recordingPDF) endRecordingPDF();  // end saving a .pdf file with the image of the canvas
 
-  fill(black); displayHeader(); // displays header
+  fill(black); //displayHeader(); // displays header
   //if(scribeText && !filming) displayFooter(); // shows title, menu, and my face & name 
 
   if(filming && (animating || change)) snapFrameToTIF(); // saves image on canvas as movie frame 
   if(snapTIF) snapPictureToTIF();   
   if(snapJPG) snapPictureToJPG();   
   change=false; // to avoid capturing movie frames when nothing happens
-  }  // end of draw
+
+  if(!shapeDraw && selectSave) {
+    
+     goodSplit = splitBy();
+     makeCuts();
+     P.findIntersection(P, A, B);
+   }
+
+}  // end of draw
   
 void drawShape() {
    if (mousePressed) {
@@ -91,6 +110,10 @@ void drawShape() {
     mousePressed = false;
     
   }
+  editShape();
+}
+
+void editShape() {
   beginShape();
  
   stroke(0);
@@ -100,7 +123,7 @@ void drawShape() {
       ellipseMode(CENTER);
       ellipse(x[0], y[0], w, h);
       vertex(x[0], y[0]);
-      nodes += 1;
+     
       
       
 
@@ -110,6 +133,9 @@ void drawShape() {
       if (((x[i] > x[0] - w/2) && (x[i] < x[0] + w/2)) && ((y[i] > x[0] - h/2) && (y[i] < y[0] + h/2))) {
         fill(0, 255, 153);
         vertex(x[0], y[0]);
+        x[numOfClicks] = P.G[0].x;
+        y[numOfClicks] = P.G[0].y;
+        P.addPt(x[numOfClicks], y[numOfClicks]);
         nodes += 1;
         shapeDraw = false;
 
@@ -159,6 +185,7 @@ void mousePressed() {
   
   if (save.mouseOver()) {
     P.savePts("data/pts");
+    P.saveLines("data/lines");
     println("\n Your puzzle is saved.");
     shapeDraw = false;
     selectSave = true;
@@ -169,7 +196,53 @@ void mousePressed() {
     shapeDraw = false;
     selectLoad = true;
   }
+  if(buttonA.mouseOver()) {
+    dragA = true;
+  } else {
+    dragA = false;
+  }
+  if(buttonB.mouseOver()) {
+    dragB = true;
+  } else {
+    dragB = false;
+  }
+}
  
-  
+ int n(int v) {return (v+1)%nv;}
+int p(int v) {return (v+nv-1)%nv;}
+boolean splitBy() {
+   for (int v=0; v<nv; v++) {
+     if (LineStabsEdge(A, B, P.G[v], P.G[n(v)]))
+       {
+         //pen(red, 4);
+         edge(P.G[v], P.G[n(v)]);
+         return true;
+       }
+   }
+   return false;
 }
 
+void makeCuts() {
+  getPen();
+ // A = P((x[0]+x[1])/2, (y[0]+y[1])/2);
+ // B = P((x[1]+x[2])/2, (y[1]+y[2])/2);
+  arrow(A, B);
+  buttonA = new Button("A", A.x, A.y, w, h, 10);
+  buttonB = new Button("A", B.x, B.y, w, h, 10);
+ // ellipse(A.x, A.y, w, h);
+ ////showId(A, "A");
+ // ellipse(B.x, B.y, w, h);
+  //showId(B, "B");
+  pen(black, 1);
+}
+
+boolean LineStabsEdge(pt A, pt B, pt C, pt D) {
+   return true; 
+}
+
+void getPen() {
+   if (goodSplit) {
+    pen(green, 5);
+  } else pen(red, 7);
+}
+  

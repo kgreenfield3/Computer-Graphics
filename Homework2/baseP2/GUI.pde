@@ -158,7 +158,24 @@ void mouseDragged() // executed when the mouse is dragged (while mouse buttom pr
       }
   if (keyPressed && key=='s') B=Mouse(); 
   change=true;
-  }  
+  
+  if (dragA) {
+    getPen();
+    A.x = mouseX;
+    A.y = mouseY;
+    arrow(A, B);
+    buttonA = new Button("A", A.x, A.y, w, h, 10);
+    pen(black, 1);
+  }
+  if (dragB) {
+    getPen();
+    B.x = mouseX;
+    B.y = mouseY;
+    arrow(A, B);
+    buttonB = new Button("A", B.x, B.y, w, h, 10);
+    pen(black, 1);
+  }
+ }  
 
 void mouseWheel(MouseEvent event) { // reads mouse wheel and uses to zoom
   float s = event.getAmount();
@@ -167,8 +184,8 @@ void mouseWheel(MouseEvent event) { // reads mouse wheel and uses to zoom
   }
 
 //**************************** text for name, title and help  ****************************
-String title ="Split Polygon Puzzle",            name ="Student: First LAST",
-       subtitle = "  base code for P2 for Jarek Rossignac's CS3451 class in the Fall 2016";
+//String title ="Split Polygon Puzzle",            name ="Student: First LAST",
+       //subtitle = "  base code for P2 for Jarek Rossignac's CS3451 class in the Fall 2016";
        
        //menu="?:(show/hide) help, ~/!/@:snap pdf/jpg/fif, `:(start/stop) recording, S/L:save/load, Q:quit",
        //guide="click&drag:edit, d&click:delete, i&click&drag:insrt, s&click&drag:split"; // help info
