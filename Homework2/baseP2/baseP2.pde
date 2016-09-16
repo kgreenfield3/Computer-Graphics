@@ -12,7 +12,7 @@ int nv = int(P.length());
 pts Q = new pts();
 float t=0, f=0;
 boolean animate=true, fill=false, timing=false;
-boolean lerp=true, slerp=true, spiral=true; // toggles to display vector interpoations
+boolean lerp=true, slerp=true, spiral=true, v1Pressed = false; // toggles to display vector interpoations
 int ms=0, me=0; // milli seconds start and end for timing
 int npts=20000; // number of points
 pt A=P(100,100), B=P(300,300);
@@ -35,7 +35,7 @@ float h = 35;
 pt startingPoint, endingPoint;
 float buttW = 75;
 float buttH = 25;
-Button save, load, buttonA, buttonB;
+Button save, load, buttonA, buttonB, buttonV1;
 int nodes = 0;
 
 pts newP = new pts();
@@ -68,6 +68,7 @@ void setup()               // executed once at the begining
   load = new Button("Load Puzzle", width/2 + 75, height - 30, buttW, buttH, 10);
   buttonA = new Button("", 0, 0, w, h, 10);
   buttonB = new Button("", 0, 0, w, h, 10);
+  buttonV1 = new Button("", 0, 0, w, h, 10);
   poly1 = createShape();
 } // end of setup
 
@@ -126,6 +127,9 @@ void drawShape() {
    if (mousePressed) {
     x[numOfClicks] = mouseX;
     y[numOfClicks] = mouseY;
+    if (numOfClicks == 1) {
+      buttonV1 = new Button("BUTTON", x[1], y[1], w, h, 10);
+    }
     P.addPt(x[numOfClicks], y[numOfClicks]);
     //println("Point " + numOfClicks + ": " + x[numOfClicks] + ", " + y[numOfClicks]);
     numOfClicks++;
@@ -145,7 +149,7 @@ void editShape() {
       ellipse(x[0], y[0], w, h);
       vertex(x[0], y[0]); 
     }
-    if (i > 0) {
+    if (i > 0 || v1Pressed) {
       if (((x[i] > x[0] - w/2) && (x[i] < x[0] + w/2)) && ((y[i] > x[0] - h/2) && (y[i] < y[0] + h/2))) {
         fill(0, 255, 153);
         vertex(x[0], y[0]);
@@ -190,6 +194,9 @@ void mousePressed() {
     println("\n Your puzzle is loaded.");
     shapeDraw = false;
     selectLoad = true;
+  }
+  if(buttonV1.mouseOver()) {
+    v1Pressed = true;
   }
   if(buttonA.mouseOver()) {
     dragA = true;
