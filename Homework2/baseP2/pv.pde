@@ -11,6 +11,7 @@
 class pt 
   { 
   float x=0,y=0; 
+  float label = 0;
   
   // CREATE
   pt () {}
@@ -18,7 +19,7 @@ class pt
 
   // MODIFY
   pt setTo(float px, float py) {x = px; y = py; return this;};  
-  pt setTo(pt P) {x = P.x; y = P.y; return this;}; 
+  pt setTo(pt P) {x = P.x; y = P.y; label = P.label; return this;}; 
   pt setToMouse() { x = mouseX; y = mouseY;  return this;}; 
   pt add(float u, float v) {x += u; y += v; return this;}                       // P.add(u,v): P+=<u,v>
   pt add(pt P) {x += P.x; y += P.y; return this;};                              // incorrect notation, but useful for computing weighted averages
@@ -42,8 +43,10 @@ class pt
   pt label(String s, float u, float v) {fill(black); text(s, x+u, y+v); noFill(); return this; };
   pt label(String s, vec V) {fill(black); text(s, x+V.x, y+V.y); noFill(); return this; };
   pt label(String s) {label(s,5,4); return this; };
-  pt label(int s) {label(s,5,4); return this; };
-  pt label(int s, float u, float v) {fill(black); text(s, x+u, y+v); noFill(); return this; };
+  pt label(float s) {label(s,5,4); return this; };
+  pt label(float s, float u, float v) {fill(black); text(s, x+u, y+v); noFill(); return this; };
+  void setLabel(float s) { label = s; }
+  float getLabel() { return label; }
 } // end of pt class
 
 

@@ -31,9 +31,9 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
     if(key=='-') ;
     if(key=='=') ;
 
-    if(key=='a') ; 
-    if(key=='b') ; 
-    if(key=='c') P.resetOnCircle(P.nv);
+    if(key=='a') isSet = !isSet;
+    if(key=='b') newP.savePts1("data/poly"); 
+    if(key=='c') newP.createPolygonsRight("data/poly");
     if(key=='d') ; 
     if(key=='e') edgeDraw = !edgeDraw;
     if(key=='f') ;
@@ -109,18 +109,18 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
   
     if(key==' ') ;
   
-    if (key == CODED) 
-       {
-       String pressed = "Pressed coded key ";
-       if (keyCode == UP) {pressed="UP";   }
-       if (keyCode == DOWN) {pressed="DOWN";   };
-       if (keyCode == LEFT) {pressed="LEFT";   };
-       if (keyCode == RIGHT) {pressed="RIGHT";   };
-       if (keyCode == ALT) {pressed="ALT";   };
-       if (keyCode == CONTROL) {pressed="CONTROL";   };
-       if (keyCode == SHIFT) {pressed="SHIFT";   };
-       println("Pressed coded key = "+pressed); 
-       } 
+    //if (key == CODED) 
+    //   {
+    //   String pressed = "Pressed coded key ";
+    //   if (keyCode == UP) {pressed="UP";   }
+    //   if (keyCode == DOWN) {pressed="DOWN";   };
+    //   if (keyCode == LEFT) {pressed="LEFT";   };
+    //   if (keyCode == RIGHT) {pressed="RIGHT";   };
+    //   if (keyCode == ALT) {pressed="ALT";   };
+    //   if (keyCode == CONTROL) {pressed="CONTROL";   };
+    //   if (keyCode == SHIFT) {pressed="SHIFT";   };
+    //   println("Pressed coded key = "+pressed); 
+    //   } 
   
     change=true; // to make sure that we save a movie frame each time something changes
     println("key pressed = "+key);
@@ -160,7 +160,7 @@ void mouseDragged() // executed when the mouse is dragged (while mouse buttom pr
   change=true;
   
   if (dragA) {
-    getPen();
+    //getPen();
     A.x = mouseX;
     A.y = mouseY;
     arrow(A, B);
@@ -168,7 +168,7 @@ void mouseDragged() // executed when the mouse is dragged (while mouse buttom pr
     pen(black, 1);
   }
   if (dragB) {
-    getPen();
+    //getPen();
     B.x = mouseX;
     B.y = mouseY;
     arrow(A, B);
@@ -188,5 +188,5 @@ void mouseWheel(MouseEvent event) { // reads mouse wheel and uses to zoom
        //subtitle = "  base code for P2 for Jarek Rossignac's CS3451 class in the Fall 2016";
        
        //menu="?:(show/hide) help, ~/!/@:snap pdf/jpg/fif, `:(start/stop) recording, S/L:save/load, Q:quit",
-       //guide="click&drag:edit, d&click:delete, i&click&drag:insrt, s&click&drag:split"; // help info
+       String guide="save->a->b->c: creates a file for side1 of polygon"; // help info
      

@@ -11,7 +11,7 @@ class pts
   int iv = 0;                              // insertion index 
   int maxnv = 100*2*2*2*2*2*2*2*2;         //  max number of vertices
   Boolean loop=true;                       // is a closed loop
-
+  float label;
   pt[] G = new pt [maxnv];                 // geometry table (vertices)
 
  // CREATE
@@ -25,8 +25,24 @@ class pts
   
   void addPt(pt P) { G[nv].setTo(P); pv=nv; nv++;  }                    // appends a point at position P
   
-  void addPt(float x,float y) { G[nv].x=x; G[nv].y=y; pv=nv; nv++; }    // appends a point at position (x,y)
+  void addPt(float x,float y) { G[nv].x=x; G[nv].y=y; pv=nv; nv++; }// appends a point at position (x,y)
   
+  float getLabel(pt P) {
+    for (int i = 0; i < nv; i++) {
+      if (G[i].x == P.x && G[i].y == P.y)  {
+        label = P.label;
+        //return label;
+      } 
+    }
+    return label;
+  }
+  void setLabel(pt P, float s) {
+    for (int i = 0; i < nv; i++) {
+      if (G[i].x == P.x && G[i].y == P.y)  {
+        G[i].label = s;
+      } 
+    }
+  }
   void insertPt(pt P)  // inserts new point after point pv
     { 
     for(int v=nv-1; v>pv; v--) G[v+1].setTo(G[v]); 
@@ -273,22 +289,83 @@ class pts
     }
 
 
-  // FILE I/O   
-     
-  void savePts(String fn) {
+  // FILE I/O  - CREATED BY US
+  void savePts(String fn, int num) {
     println("Saving: " + fn); 
-    String[] inppts = new String[nv];
+    String[] inppts = new String[num + 1];
     int s = 0;
-    nv -= 1;
-    inppts[s++] = str(nv);
-    for (int i=0; i< nv; i++) {
+    num -= 1;
+    inppts[s++] = str(num);
+    for (int i=0; i< num -1; i++) {
        inppts[s++]=str(G[i].x)+","+str(G[i].y);
     }
     //inppts[s++]=str(G[0].x)+","+str(G[0].y);
      saveStrings(fn, inppts);
     
  };
-  
+   void savePts2(String fn) {
+    println("Saving: " + fn); 
+    String[] inppts = new String[nv + 1];
+    int s = 0;
+    //nv -= 1;
+    inppts[s++] = str(nv);
+    for (int i=0; i< nv; i++) {
+       inppts[s++]=str(G[i].x)+","+str(G[i].y);
+    }
+    //inppts[s++]=str(G[0].x)+","+str(G[0].y);
+    //inppts[s++]=str(G[0].x)+","+str(G[0].y);
+     saveStrings(fn, inppts);
+    
+ };
+ //save intersection pts 
+void savePts1(String fn) {
+    println("Saving: " + fn); 
+    nv -= 1;
+    String[] inppts = new String[nv];
+    int s = 0;
+    inppts[s++] = str(nv - 1);
+    for (int i=1; i< nv; i++) {
+       inppts[s++]=str(G[i].label) + ":" + str(G[i].x)+","+str(G[i].y);
+       //println(G[i].label);
+    }
+    //inppts[s++]=str(G[0].x)+","+str(G[0].y);
+     saveStrings(fn, inppts);
+     //createPolygons(fn);
+    
+ };
+ //Creates the right most piece
+ void createPolygonsRight(String fn) {
+   println("loading: "+fn); 
+    String [] ss = loadStrings(fn);
+    String subpts;
+    int s = 0;   float x0 = 0, y0 = 0, xn = 0, yn = 0;   int a, b, c; int j = (int) (start + .5);
+    nv = int(ss[s++]); print("nv = " +nv);
+    fill(0, 255, 153);
+    strokeWeight(1);
+    stroke(black);
+   //start = float(ss[0].substring(0, colon));
+   //end = float(ss[nv].substring(0, colon));
+   float difference = newP.G[nv].getLabel() - newP.G[1].getLabel();
+   println("dif: " + difference);
+    beginShape();
+    vertex(newP.G[0].x, newP.G[0].y);
+    poly.addPt(newP.G[0]);
+    
+    while (j <= difference) {
+      //vertex(P.G[j].x, P.G[j].y);
+      poly.addPt(P.G[j]);
+      vertex(P.G[j].x, P.G[j].y);
+      println("\n" + P.G[j].x + "," + P.G[j].y);
+      j++;
+    }
+    poly.addPt(newP.G[nv]);
+    vertex(newP.G[nv].x, newP.G[nv].y);
+    endShape(CLOSE);
+    poly.savePts2("data/temp");
+}
+   
+   
+ 
   void saveLines(String fn) {
     println("Saving: " + fn); 
     String[] inppts = new String[nv + 1];
@@ -308,27 +385,36 @@ class pts
     float m1, b1, x, y;
     float m = (A.y - B.y) / (A.x - B.x);
     float b = A.y - m * A.x;
-    pts copyP = new pts();
-    pt newP = new pt();
-    PShape poly1;
-    int labelNum = 0;
+    float x0, y0, xn, yn;
     for(int k = 1; k <= nv; k++) {
         m1 = (P.G[k].y - P.G[k - 1].y) / (P.G[k].x - P.G[k - 1].x);
         b1 = P.G[k].y - m1 * P.G[k].x;
         x = (b1 - b) / (m - m1);
         y = m * x + b;
         //copyP.addPt(P.G[k].x, P.G[k].y);
-        if ((x > min(A.x, B.x)) && (x < max(A.x, B.x)) && (y > min(A.y, B.y)) && (y < max(A.y, B.y))
-        && (x > min(P.G[k].x, P.G[k-1].x)) && (x < max(P.G[k].x, P.G[k-1].x)) && (y > min(P.G[k].y, P.G[k-1].y)) && (y < max(P.G[k].y, P.G[k-1].y))) {
-          fill(255, 0, 0);
-          ellipse(x, y, 20, 20);
-          newP.setTo(x, y);
-          newP.label(labelNum);
-          labelNum++;
-       
-          
-          
-       } 
+        if (det(V(P.G[k], P.G[k-1]), V(P.G[k], A)) > 0 == det(V(P.G[k], P.G[k-1]), V(P.G[k], B)) > 0) {
+           float t = - det(V(P.G[k], P.G[k-1]), V(P.G[k], A)) / det(V(P.G[k], P.G[k-1]), V(P.G[k], B));
+           
+           
+        }
+        //if ((x > min(A.x, B.x)) && (x < max(A.x, B.x)) && (y > min(A.y, B.y)) && (y < max(A.y, B.y))
+        //&& (x > min(P.G[k].x, P.G[k-1].x)) && (x < max(P.G[k].x, P.G[k-1].x)) && (y > min(P.G[k].y, P.G[k-1].y)) && (y < max(P.G[k].y, P.G[k-1].y))) {
+        //  labelNum = ((k) + (k-1))*.5;
+        //  //endingPt++;
+        //  fill(255, 0, 0);
+        //  ellipse(x, y, 20, 20);
+        //  if (isSet) {
+        //    noLoop();
+        //    newPt.setTo(x, y);
+        //    newPt.setLabel(labelNum);
+        //    newPt.label(labelNum);
+        //    println(newPt.label + "- X: " + newPt.x + "Y: " + newPt.y);
+        //    newP.addPt(newPt);
+        //    newP.addPt(newPt);
+        //  //newP.addPt(P.G[k]);
+        //  }
+       //}// 
+    
      
     };
     
@@ -357,7 +443,30 @@ class pts
     addEllipse(nv);
     pv = 0;
     }; 
-    
+void loadPts1(String fn) 
+    {
+    println("loading: "+fn); 
+    String [] ss = loadStrings(fn);
+    String subpts;
+    int s = 0;   int comma, comma1, comma2;   float x, y;   int a, b, c;
+    nv = int(ss[s++]); print("nv = " +nv);
+    //fill(0, 255, 153);
+    strokeWeight(1);
+    stroke(red);
+    fill(blue);
+    beginShape();
+    for(int k = 0; k < nv; k++) {
+      int i = k + s; 
+      comma = ss[i].indexOf(',');   
+      x = float(ss[i].substring(0, comma));
+      y = float(ss[i].substring(comma + 1, ss[i].length()));
+      G[k].setTo(x,y);
+      stroke(green);
+      vertex(G[k].x, G[k].y);
+     
+    };
+    endShape(CLOSE);
+    }
 void addEllipse(int nv) {
  for(int j = 0; j < nv; j++) {
     ellipseMode(CENTER);
@@ -367,5 +476,106 @@ void addEllipse(int nv) {
     showId(G[j], j);  
   }
 }
-  }  // end class pts
+
+void getCuts(PShape poly1, pts newP) {
+        println("Making cuts");
+        poly1.beginShape();
+        fill(green);
+        stroke(black);
+        for (int j = 0; j <= P.length() + 1; j++) {
+           
+           if (j == 0) {
+             vertex(newP.G[j].x, newP.G[j].y);
+           } 
+           vertex(P.G[j].x, P.G[j].y);
+           if (j == P.length() + 1) {
+             vertex(newP.G[j].x, newP.G[j].y);
+           }
+        }
+         poly1.beginShape(CLOSE);
+         //poly1.loadPts("data/poly");
+}
+void getNewP() {
+  int len = (int)copy.length();
+    copy.addPt(newP.G[len - 1]);
+     copy.addPt(newP.G[len]);
+     copyOf(copy, newP, 2);
+     newP.savePts("data/poly", numOfClicks); 
   
+}
+
+
+//Arrow stuff
+int n(int v) {return (v+1)%nv;}
+int p(int v) {return (v+nv-1)%nv;}
+boolean splitBy(pt A, pt B) {
+boolean isSplit = true;
+int r = 0, g = 0, b = 0;
+  vec V = V(A, B);
+  
+  for(int v = 0; v < nv; v++) {
+   if (LineStabsEdge(A, V, G[v], G[n(v)])) {
+     float t = RayEdgeCrossParameter(A, V, G[v], G[n(v)]);
+      pt X = P(A, t, V);
+     if (t < 0 ) {
+       pen(red, 2);
+       r++;
+       println("t < 0");
+       //return true;
+     }
+     if (0 <= t && t <=1) {
+       pen(green, 5);
+       g++;
+       //isSplit = false;
+        println("0 <= t && t <=1");
+        //isSplit = false;
+     }
+     if (1 < t) {
+        pen(blue, 2); 
+        b++;
+        println("t > 1");
+         //return true;
+     }
+     
+     //return true;
+     show(X, 4);
+     pen(green, 4);
+     edge(G[v], G[n(v)]);
+   }
+   
+   
+  
+  }
+  if ((r % 2) != 0 && (g % 2) == 0 && (b % 2) != 0) {
+    return true;  
+  } 
+  return false;
+}
+
+void makeCuts() {
+  //getPen();
+ // A = P((x[0]+x[1])/2, (y[0]+y[1])/2);
+ // B = P((x[1]+x[2])/2, (y[1]+y[2])/2);
+  arrow(A, B);
+  buttonA = new Button("A", A.x, A.y, w, h, 10);
+  buttonB = new Button("A", B.x, B.y, w, h, 10);
+ // ellipse(A.x, A.y, w, h);
+ ////showId(A, "A");
+ // ellipse(B.x, B.y, w, h);
+  //showId(B, "B");
+  pen(black, 1);
+}
+
+boolean LineStabsEdge(pt A, vec V, pt C, pt D) {
+   if ((det(V(C, D), V(A, C)) > 0 && det(V(C, D), V) > 0) == (det(V(C, D), V(A, D)) > 0 && det(V(C, D), V) > 0)) {
+      return true; 
+    } 
+    return false;
+}
+
+  }  // end class pts
+
+float RayEdgeCrossParameter(pt A, vec V, pt C, pt D) {
+   float t = - det(V(C, D), V(C, A)) / (det(V(C, D), V));
+   return t;
+}
